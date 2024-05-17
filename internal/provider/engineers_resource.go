@@ -15,6 +15,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -48,6 +50,9 @@ func (r *EngineerResource) Schema(ctx context.Context, req resource.SchemaReques
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Engineer id",
 				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"email": schema.StringAttribute{
 				Required:            true,
@@ -181,19 +186,68 @@ func (r *EngineerResource) Update(ctx context.Context, req resource.UpdateReques
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
 
+	// Log the entire data object
+	log.Printf("Data: %+v", data)
+
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	// If applicable, this is a great opportunity to initialize any necessary
-	// provider client data and make a call using it.
-	// httpResp, err := r.client.Do(httpReq)
-	// if err != nil {
-	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update example, got error: %s", err))
-	//     return
-	// }
+	log.Printf("ID: %s", data.Id.ValueString())
 
-	// Save updated data into Terraform state
+	var engineerObject EngineerAPIModel
+	engineerObject.Name = data.Name.ValueString()
+	engineerObject.Id = data.Id.ValueString()
+	engineerObject.Email = data.Email.ValueString()
+
+	// Convert data to JSON
+	jsonData, err := json.Marshal(engineerObject)
+	if err != nil {
+		log.Printf("Error marshalling JSON: %s", err)
+	} else {
+		log.Printf("Marshalled JSON: %s", string(jsonData))
+	}
+
+	// Create a new HTTP request
+	newReq, err := http.NewRequest(http.MethodPut, "http://localhost:8080/engineers/"+data.Id.ValueString(), bytes.NewBuffer(jsonData))
+	if err != nil {
+		resp.Diagnostics.AddError("Request Error", fmt.Sprintf("Unable to create request, got error: %s", err))
+		return
+	}
+
+	// Set the Content-Type header
+	newReq.Header.Set("Content-Type", "application/json")
+
+	// Send the request
+	httpResp, err := r.client.Do(newReq)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update example, got error: %s", err))
+		return
+	}
+	// Read the HTTP response body
+	bodyBytes, err := ioutil.ReadAll(httpResp.Body)
+	if err != nil {
+		resp.Diagnostics.AddError("Read Error", fmt.Sprintf("Unable to read response body, got error: %s", err))
+		return
+	}
+
+	// Log the response body
+	log.Printf("Response Body: %s", string(bodyBytes))
+
+	// Unmarshal the response into an Engineer struct
+	var engineerRespObject EngineerAPIModel
+	err = json.Unmarshal(bodyBytes, &engineerRespObject)
+	if err != nil {
+		resp.Diagnostics.AddError("JSON Error", fmt.Sprintf("Unable to unmarshal response body, got error: %s", err))
+		return
+	}
+
+	// Map response body to schema and populate Computed attribute values
+	data.Name = types.StringValue(engineerRespObject.Name)
+	data.Id = types.StringValue(engineerRespObject.Id)
+	data.Email = types.StringValue(engineerRespObject.Email)
+
+	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
@@ -207,13 +261,45 @@ func (r *EngineerResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
-	// If applicable, this is a great opportunity to initialize any necessary
-	// provider client data and make a call using it.
-	// httpResp, err := r.client.Do(httpReq)
-	// if err != nil {
-	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete example, got error: %s", err))
-	//     return
-	// }
+	var engineerObject EngineerAPIModel
+	engineerObject.Name = data.Name.ValueString()
+	engineerObject.Id = data.Id.ValueString()
+	engineerObject.Email = data.Email.ValueString()
+
+	// Convert data to JSON
+	jsonData, err := json.Marshal(engineerObject)
+	if err != nil {
+		log.Printf("Error marshalling JSON: %s", err)
+	} else {
+		log.Printf("Marshalled JSON: %s", string(jsonData))
+	}
+
+	// Create a new HTTP request
+	newReq, err := http.NewRequest(http.MethodDelete, "http://localhost:8080/engineers/"+data.Id.ValueString(), bytes.NewBuffer(jsonData))
+	if err != nil {
+		resp.Diagnostics.AddError("Request Error", fmt.Sprintf("Unable to create request, got error: %s", err))
+		return
+	}
+
+	// Set the Content-Type header
+	newReq.Header.Set("Content-Type", "application/json")
+
+	// Send the request
+	httpResp, err := r.client.Do(newReq)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update example, got error: %s", err))
+		return
+	}
+
+	// Read the HTTP response body
+	bodyBytes, err := ioutil.ReadAll(httpResp.Body)
+	if err != nil {
+		resp.Diagnostics.AddError("Read Error", fmt.Sprintf("Unable to read response body, got error: %s", err))
+		return
+	}
+
+	// Log the response body
+	log.Printf("Response Body: %s", string(bodyBytes))
 }
 
 func (r *EngineerResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
