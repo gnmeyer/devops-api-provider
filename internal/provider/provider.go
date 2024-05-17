@@ -21,9 +21,6 @@ var _ provider.ProviderWithFunctions = &DevopsProvider{}
 
 // DevopsProvider defines the provider implementation.
 type DevopsProvider struct {
-	// version is set to the provider version on release, "dev" when the
-	// provider is built and ran locally, and "test" when running acceptance
-	// testing.
 	version string
 }
 
@@ -68,16 +65,16 @@ func (p *DevopsProvider) Configure(ctx context.Context, req provider.ConfigureRe
 
 func (p *DevopsProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		NewExampleResource,
 		NewEngineerResource,
 	}
 }
 
 func (p *DevopsProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		//NewEngineersDataSource,
-		NewExampleDataSource,
 		NewEngineerDataSource,
+		NewOpsDataSource,
+		NewDevDataSource,
+		NewDevopsDataSource,
 	}
 }
 
