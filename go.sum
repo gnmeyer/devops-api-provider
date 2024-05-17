@@ -137,6 +137,8 @@ github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0
 github.com/kylelemons/godebug v1.1.0/go.mod h1:9/0rRGxNHcop5bhtWyNeEfOS8JIWk580+fNqagV/RAw=
 github.com/liatrio/devops-bootcamp/examples/ch6/devops-resources v0.0.0-20230601211626-d91eb88bfc94 h1:Vz4783huCHtYlyJZyajb3TTYSznMqOIOp7VTxJRKPUk=
 github.com/liatrio/devops-bootcamp/examples/ch6/devops-resources v0.0.0-20230601211626-d91eb88bfc94/go.mod h1:Wy8YNDvnY+iVDU2soHwZQFTv0NQ1sBoJQVTe44z4wF0=
+github.com/liatrio/devops-bootcamp/examples/ch7/devops-resources v0.0.0-20240509204203-d812119378bc h1:CkH+O9GM/sfDLQ1U9brg50wxsFMFE5P11Dky1pwVHcQ=
+github.com/liatrio/devops-bootcamp/examples/ch7/devops-resources v0.0.0-20240509204203-d812119378bc/go.mod h1:4/jOK0F/KUFEvemqN4XCD4aVXhAMEZ+VDXR1mPB9CFk=
 github.com/mattn/go-colorable v0.1.9/go.mod h1:u6P/XSegPjTcexA+o6vUJrdnUu04hMope9wVRipJSqc=
 github.com/mattn/go-colorable v0.1.12/go.mod h1:u5H1YNBxpqRaxsYJYSkiCWKzEfiAb1Gb520KVy5xxl4=
 github.com/mattn/go-colorable v0.1.13 h1:fFA4WZxdEF4tXPZVKMLwD8oUnCTTo08duU7wxecdEvA=
