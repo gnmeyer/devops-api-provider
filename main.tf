@@ -25,25 +25,49 @@
 #   value = data.devops-bootcamp_devops.devops_test
 # }
 
-resource "devops-bootcamp_engineer-resource" "example" {
-  name  = "joeski"
-  email = "myles@dudes.com"
+resource "devops-bootcamp_engineer-resource" "grant" {
+  name  = "grant"
+  email = "grant@google.com"
 }
 
-resource "devops-bootcamp_engineer-resource" "engineer_joe" {
-  name = "joe"
-  email = "joe@joe.com"
+resource "devops-bootcamp_engineer-resource" "jocko" {
+  name  = "jocko"
+  email = "jocko@google.com"
 }
+
+resource "devops-bootcamp_engineer-resource" "ben" {
+  name  = "ben"
+  email = "ben@google.com"
+}
+
+resource "devops-bootcamp_engineer-resource" "myles" {
+  name = "myles"
+  email = "myles@google.com"
+}
+resource "devops-bootcamp_engineer-resource" "wick" {
+  name = "wick"
+  email = "wick@google.com"
+}
+
 
 resource "devops-bootcamp_ops-resource" "example" {
   name = "example-ops"
   engineers = [
       {
-      id = devops-bootcamp_engineer-resource.engineer_joe.id
+      id = devops-bootcamp_engineer-resource.grant.id
     },
     {
-      id = devops-bootcamp_engineer-resource.example.id
-    }
+      id = devops-bootcamp_engineer-resource.jocko.id
+    },
+    {
+     id = devops-bootcamp_engineer-resource.myles.id
+    },
+    {
+      id = devops-bootcamp_engineer-resource.jocko.id
+    },
+    # {
+    #   id = devops-bootcamp_engineer-resource.wick.id
+    # }
   ]
 
 }
