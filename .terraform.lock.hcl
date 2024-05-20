@@ -4,6 +4,6 @@
 provider "liatr.io/terraform/devops-bootcamp" {
   version = "0.0.1"
   hashes = [
-    "h1:6ouVs87ZE0WK7eghVf+qzyT22C5nHMpXnaGOaQtnBKk=",
+    "h1:79zcuux8Sr6aQnpLK1E2Gg15GAu7KHAp1DrY+w877C0=",
   ]
 }

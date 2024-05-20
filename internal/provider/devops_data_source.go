@@ -161,9 +161,9 @@ func (d *DevopsDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	// Convert API model to Terraform schema model and set in state
 	for _, apiDevopsItem := range apiDevops {
 		devopsState := DevopsTFModel{
-			Id:  types.StringValue(apiDevopsItem.Id),
-			Dev: convertDevAPIModelToTFModel(apiDevopsItem.Dev),
-			Ops: convertOpsAPIModelToTFModel(apiDevopsItem.Ops),
+			Id: types.StringValue(apiDevopsItem.Id),
+			// Dev: convertDevAPIModelToTFModel(apiDevopsItem.Dev),
+			// Ops: convertOpsAPIModelToTFModel(apiDevopsItem.Ops),
 		}
 
 		state.Devops = append(state.Devops, devopsState)
@@ -177,43 +177,43 @@ func (d *DevopsDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 }
 
 // Helper function to convert API model to Terraform schema model
-func convertDevAPIModelToTFModel(apiModel []DevAPIModel) []DevTFModel {
-	var tfModel []DevTFModel
-	for _, apiItem := range apiModel {
-		tfItem := DevTFModel{
-			Name:      types.StringValue(apiItem.Name),
-			Id:        types.StringValue(apiItem.Id),
-			Engineers: convertEngineerAPIModelToTFModel(apiItem.Engineers),
-		}
-		tfModel = append(tfModel, tfItem)
-	}
-	return tfModel
-}
+// func convertDevAPIModelToTFModel(apiModel []DevAPIModel) []DevTFModel {
+// 	var tfModel []DevTFModel
+// 	for _, apiItem := range apiModel {
+// 		tfItem := DevTFModel{
+// 			Name:      types.StringValue(apiItem.Name),
+// 			Id:        types.StringValue(apiItem.Id),
+// 			Engineers: convertEngineerAPIModelToTFModel(apiItem.Engineers),
+// 		}
+// 		tfModel = append(tfModel, tfItem)
+// 	}
+// 	return tfModel
+// }
 
-// Helper function to convert API model to Terraform schema model
-func convertOpsAPIModelToTFModel(apiModel []OpsAPIModel) []OpsTFModel {
-	var tfModel []OpsTFModel
-	for _, apiItem := range apiModel {
-		tfItem := OpsTFModel{
-			Name:      types.StringValue(apiItem.Name),
-			Id:        types.StringValue(apiItem.Id),
-			Engineers: convertEngineerAPIModelToTFModel(apiItem.Engineers),
-		}
-		tfModel = append(tfModel, tfItem)
-	}
-	return tfModel
-}
+// // Helper function to convert API model to Terraform schema model
+// func convertOpsAPIModelToTFModel(apiModel []OpsAPIModel) []OpsTFModel {
+// 	var tfModel []OpsTFModel
+// 	for _, apiItem := range apiModel {
+// 		tfItem := OpsTFModel{
+// 			Name:      types.StringValue(apiItem.Name),
+// 			Id:        types.StringValue(apiItem.Id),
+// 			Engineers: convertEngineerAPIModelToTFModel(apiItem.Engineers),
+// 		}
+// 		tfModel = append(tfModel, tfItem)
+// 	}
+// 	return tfModel
+// }
 
-// Helper function to convert Engineer API model to Terraform schema model
-func convertEngineerAPIModelToTFModel(apiModel []EngineerAPIModel) []EngineerTFModel {
-	var tfModel []EngineerTFModel
-	for _, apiItem := range apiModel {
-		tfItem := EngineerTFModel{
-			Name:  types.StringValue(apiItem.Name),
-			Id:    types.StringValue(apiItem.Id),
-			Email: types.StringValue(apiItem.Email),
-		}
-		tfModel = append(tfModel, tfItem)
-	}
-	return tfModel
-}
+// // Helper function to convert Engineer API model to Terraform schema model
+// func convertEngineerAPIModelToTFModel(apiModel []EngineerAPIModel) []EngineerTFModel {
+// 	var tfModel []EngineerTFModel
+// 	for _, apiItem := range apiModel {
+// 		tfItem := EngineerTFModel{
+// 			Name:  types.StringValue(apiItem.Name),
+// 			Id:    types.StringValue(apiItem.Id),
+// 			Email: types.StringValue(apiItem.Email),
+// 		}
+// 		tfModel = append(tfModel, tfItem)
+// 	}
+// 	return tfModel
+// }
