@@ -80,9 +80,7 @@ func (p *DevopsProvider) DataSources(ctx context.Context) []func() datasource.Da
 }
 
 func (p *DevopsProvider) Functions(ctx context.Context) []func() function.Function {
-	return []func() function.Function{
-		NewExampleFunction,
-	}
+	return []func() function.Function{}
 }
 
 func New(version string) func() provider.Provider {

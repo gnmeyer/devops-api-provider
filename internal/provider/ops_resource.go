@@ -225,7 +225,7 @@ func (r *OpsResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Ops, got error: %s", err))
 		return
 	}
-	defer httpResp.Body.Close()
+	// defer httpResp.Body.Close()
 
 	// Read the HTTP response body into a byte slice
 	bodyBytes, err := ioutil.ReadAll(httpResp.Body)
@@ -245,6 +245,9 @@ func (r *OpsResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 	// // Update the data object with the response data
 	data.Name = types.StringValue(OpsRespObject.Name)
 	data.Id = types.StringValue(OpsRespObject.Id)
+
+	// Clear existing engineers before appending new ones
+	data.Engineers = []EngineerTFModel{} // Reinitialize the slice
 
 	for _, tfEngineer := range OpsRespObject.Engineers {
 		data.Engineers = append(data.Engineers, EngineerTFModel{
@@ -273,7 +276,9 @@ func (r *OpsResource) Update(ctx context.Context, req resource.UpdateRequest, re
 
 	log.Printf("ID: %s", data.Id.ValueString())
 
-	var apiEngineers []EngineerAPIModel
+	var OpsObject OpsAPIModel
+	OpsObject.Name = data.Name.ValueString()
+	OpsObject.Id = data.Id.ValueString()
 
 	// Convert engineers to API model and make a POST request for each engineer
 	for _, engineer := range data.Engineers {
@@ -305,7 +310,10 @@ func (r *OpsResource) Update(ctx context.Context, req resource.UpdateRequest, re
 		// If the engineer exists, add it to apiEngineers and skip to the next engineer
 		if httpEngineerResp.StatusCode == http.StatusOK {
 			tflog.Debug(ctx, "Engineer exists, moving on", map[string]interface{}{"engineerID": engineer.Id})
-			apiEngineers = append(apiEngineers, engineerRespObject)
+
+			//Store the engineer in the API model
+			OpsObject.Engineers = append(OpsObject.Engineers, engineerRespObject)
+
 			continue
 		}
 
@@ -315,11 +323,6 @@ func (r *OpsResource) Update(ctx context.Context, req resource.UpdateRequest, re
 	}
 
 	/* Step 2 Create Ops */
-
-	var OpsObject OpsAPIModel
-	OpsObject.Name = data.Name.ValueString()
-	OpsObject.Id = data.Id.ValueString()
-	OpsObject.Engineers = apiEngineers
 
 	// Convert data to JSON
 	jsonData, err := json.Marshal(OpsObject)
