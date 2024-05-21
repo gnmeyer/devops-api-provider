@@ -50,27 +50,27 @@ resource "devops-bootcamp_engineer-resource" "wick" {
 }
 
 
-resource "devops-bootcamp_ops-resource" "example" {
-  name = "example-ops"
-  engineers = [
-      {
-      id = devops-bootcamp_engineer-resource.grant.id
-    },
-    {
-      id = devops-bootcamp_engineer-resource.jocko.id
-    },
-    {
-     id = devops-bootcamp_engineer-resource.myles.id
-    },
-    {
-      id = devops-bootcamp_engineer-resource.jocko.id
-    },
-    # {
-    #   id = devops-bootcamp_engineer-resource.wick.id
-    # }
-  ]
+# resource "devops-bootcamp_ops-resource" "example" {
+#   name = "example-ops-2"
+#   engineers = [
+#     {
+#       id = devops-bootcamp_engineer-resource.grant.id
+#     },
+#     {
+#       id = devops-bootcamp_engineer-resource.jocko.id
+#     },
+#     {
+#      id = devops-bootcamp_engineer-resource.myles.id
+#     },
+#     {
+#       id = devops-bootcamp_engineer-resource.ben.id
+#     },
+#     # {
+#     #   id = devops-bootcamp_engineer-resource.wick.id
+#     # }
+#   ]
 
-}
+# }
 
 # output "example_engineer" {
 #   value = devops-bootcamp_engineer-resource.example
