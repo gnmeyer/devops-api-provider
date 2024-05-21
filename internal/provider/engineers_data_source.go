@@ -31,6 +31,7 @@ type EngineerDataSource struct {
 // EngineerDataSourceModel describes the data source data model.
 type EngineerDataSourceModel struct {
 	Engineer []EngineerTFModel `tfsdk:"engineers"`
+	// ID       types.String      `tfsdk:"id"`
 }
 
 func (d *EngineerDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -116,6 +117,8 @@ func (d *EngineerDataSource) Read(ctx context.Context, req datasource.ReadReques
 		state.Engineer = append(state.Engineer, engineer)
 
 	}
+
+	// state.ID = types.StringValue("placeholder")
 
 	diags := resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
